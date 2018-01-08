@@ -61,7 +61,8 @@
         通过复制两份li。来进行滑动
         滑动第一个图片时，瞬间跳到第部分的第一个li
         滑动第二部分最后一个图片时，跳到第一部分最后一个图片
-        某一个图片，滑动未超过一半，幻灯片不切换，是根据transformX/图片宽度，四舍五入来计算的 */
+        某一个图片，滑动未超过一半，幻灯片不切换，是根据transformX/图片宽度
+        通过四舍五入获取nowIndex的值，再调用cssTransform()方法来计算的 */
         const wrapEle = this.wrap;
         const wrapUl = this.wrapUl;
         const liWidth = wrapEle.offsetWidth;
