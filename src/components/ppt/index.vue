@@ -58,9 +58,10 @@
     methods: {
       slideInit () {
         /* 使用transform移动ul，transform无法通过style获取，所以需要封装个函数，设置和获取transform的值
-        通过复制两份li。来进行滑动，
-        滑动第一个图片时，瞬间跳到第部分的第一个li，
-        滑动第二部分最后一个图片时，跳到第一部分最后一个图片 */
+        通过复制两份li。来进行滑动
+        滑动第一个图片时，瞬间跳到第部分的第一个li
+        滑动第二部分最后一个图片时，跳到第一部分最后一个图片
+        某一个图片，滑动未超过一半，幻灯片不切换，是根据transformX/图片宽度，来计算的 */
         const wrapEle = this.wrap;
         const wrapUl = this.wrapUl;
         const liWidth = wrapEle.offsetWidth;
