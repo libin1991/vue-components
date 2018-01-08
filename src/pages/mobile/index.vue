@@ -2,6 +2,7 @@
   <div class="mobile-relative">
     <div class="left">
       <router-link :to="{name:'mobileSlip'}" tag="a">移动端滑动</router-link>
+      <router-link :to="{name:'mobilePPT'}" tag="a">幻灯片</router-link>
     </div>
     <div class="right">
       <router-view></router-view>
@@ -23,6 +24,11 @@
     bottom: 0;
     border-right:1px solid #000;
     box-sizing: border-box;
+    a{
+      display: block;
+      border-bottom:1px solid #ccc;
+      padding:10px 0;
+    }
   }
   .right{
     position: absolute;

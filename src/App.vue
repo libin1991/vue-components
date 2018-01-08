@@ -9,6 +9,7 @@
 </script>
 
 <style lang="less">
+  @import "./less/reset.css";
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
