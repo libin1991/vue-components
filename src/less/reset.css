@@ -23,6 +23,8 @@ time, mark, audio, video {
   outline:0;
   vertical-align:baseline;
   background:transparent;
+  /*保证文字在横竖屏切换时，不会随意缩放*/
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -51,6 +53,16 @@ a {
   background:transparent;
   text-decoration: none;
 }
+
+a,
+input,
+button {
+  /*移动端，链接点击后会有阴影，要清掉阴影*/
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  /*清掉圆角*/
+  -webkit-appearance: none;
+}
+
 
 ins {
   background-color:#ff9;
