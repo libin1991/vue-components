@@ -5,7 +5,21 @@
 </template>
 
 <script>
-  export default {};
+  export default {
+    mounted () {
+      this.resetRem();
+      window.addEventListener('orientationchange', this.resetRem);
+      window.addEventListener('resize', this.resetRem);
+    },
+    methods: {
+      resetRem () {
+        const htmlElm = document.querySelector('html');
+        const htmlwidth = htmlElm.getBoundingClientRect().width;
+        /* window.screen.width,会有500ms的延迟，横竖屏切换的时候可能有问题 */
+        htmlElm.style.fontSize = htmlwidth / 16 + 'px';
+      }
+    }
+};
 </script>
 
 <style lang="less">
