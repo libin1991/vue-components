@@ -1,12 +1,6 @@
 <template>
   <div class="mobile-relative">
-    <div class="left">
-      <router-link :to="{name:'mobileSlip'}" tag="a">移动端滑动</router-link>
-      <router-link :to="{name:'mobilePPT'}" tag="a">幻灯片</router-link>
-    </div>
-    <div class="right">
-      <router-view></router-view>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -15,7 +9,7 @@
 </script>
 
 <style lang="less">
-.mobile-relative{
+/*.mobile-relative{
   .left{
     position: absolute;
     width:20%;
@@ -38,5 +32,5 @@
     bottom:0;
     overflow: hidden;
   }
-}
+}*/
 </style>

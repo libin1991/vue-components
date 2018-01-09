@@ -17,13 +17,11 @@ export default new Router({
     },
     {
       path: '/mobile',
-      name: 'mobile',
       component: Mobile,
       children: MobileComp
     },
     {
       path: '/animation',
-      name: 'animation',
       component: Animation,
       children: AnimationComp
     }
