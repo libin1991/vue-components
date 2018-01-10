@@ -1,0 +1,114 @@
+@rem: 67.5rem;
+.mobile-music-wrap{
+  height:100%;
+  overflow: auto;
+  #header{
+    position: absolute;
+    left:0;
+    top:0;
+    width:100%;
+    z-index: 2;
+    background: rgba(0, 0, 0, .8);
+    .header-banner{
+      height:135/@rem;
+      .logo{
+        float: left;
+        padding: 0 17/@rem ;
+        img{
+          width:240/@rem;
+        }
+      }
+      #menuBtn{
+        float: left;
+        width:129/@rem;
+        height:135/@rem;
+        background: url('./img/menuBtn.png') no-repeat;
+        background-size: 82/@rem 233/@rem;
+        background-position: center 16/@rem !important;
+        &.menuBtnShow {
+          background-position: center -120/@rem !important;
+        }
+      }
+      #btns{
+        float: right;
+        padding-top: 31/@rem;
+        a{
+          float: left;
+          margin-right: 15/@rem;
+          width: 111/@rem;
+          color: #fff;
+          font-size: 42/@rem;
+          line-height: 78/@rem;
+          text-align: center;
+        }
+      }
+    }
+    .search{
+      height:103/@rem;
+      padding:16/@rem;
+      display: flex;
+      input[type='search']{
+        flex: 1;
+        height: 103/@rem;
+        background: #999;
+        padding: 5px 10px;
+        border: 1px solid #5a5a5a;
+        box-sizing: border-box;
+        font-size: .6rem;
+        color: #333;
+        border-radius: 15/@rem 0 0 15/@rem;
+        &:focus{
+          background: #fff;
+        }
+        &::-webkit-input-placeholder{
+          color: #333;
+        }
+      }
+      input[type='submit']{
+        width: 203/@rem;
+        height: 103/@rem;
+        float: right;
+        border: none;
+        background: #414040;
+        color: #fff;
+        border-radius: 0 15/@rem 15/@rem 0;
+        font-size: 52/@rem;
+      }
+    }
+  }
+  .content{
+    padding-top: 270/@rem;
+    position: relative;
+    z-index: 1;
+    #navScroll{
+      height: 160/@rem;
+      border-bottom: 1px solid #ccc;
+      box-sizing: border-box;
+      padding: 20/@rem 0 14/@rem;
+      overflow: hidden;
+      #navs{
+        height:120/@rem;
+        white-space:nowrap;
+        font-size: 0;
+        transition: 0.2s;
+        float: left;
+        li{
+          display: inline-block;
+          padding:0 38/@rem;
+          line-height:120/@rem;
+          font-size: 70/@rem;
+          &.active a{
+            color: lightseagreen;
+          }
+          a{
+            color: #020202;
+          }
+        }
+      }
+    }
+    #pic-tab{
+      position: relative;
+      overflow: hidden;
+    }
+  }
+}

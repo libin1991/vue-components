@@ -40,7 +40,7 @@
       this.wrap.addEventListener('touchstart', e => {
         e.preventDefault();
       });
-      Event.cssTransform(this.wrapUl, 'tranxlateX', 0);
+      Event.cssTransform(this.wrapUl, 'translateX', 0);
       this.slideInit();
       this.autoChange();
     },
@@ -125,7 +125,7 @@
     height:100%;
     overflow:hidden;
     ul{
-      position: absolute;
+      position: relative;
       left:0;
       top:0;
       bottom:0;
