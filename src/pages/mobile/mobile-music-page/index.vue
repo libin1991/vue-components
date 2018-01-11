@@ -27,6 +27,22 @@
       <div id="pic-tab">
         <Slide :imgsInfo="imgsInfo"></Slide>
       </div>
+      <div id="tab">
+        <TabChange>
+          <div class="tab"  name="全部">
+            <div>全部</div>
+          </div>
+          <div class="tab" name="内地">
+            <div>内地</div>
+          </div>
+          <div class="tab" name="港台">
+            <div>港台</div>
+          </div>
+          <div class="tab" name="欧美">
+            <div>欧美</div>
+          </div>
+        </TabChange>
+      </div>
     </div>
   </div>
 </template>
@@ -34,6 +50,7 @@
 <script>
   import Slide from '../../../components/ppt';
   import Event from '../../../util';
+  import TabChange from '../../../components/tabChange';
   export default {
     data () {
       return {
@@ -103,7 +120,8 @@
       }
     },
     components: {
-      Slide
+      Slide,
+      TabChange
     }
   };
 </script>

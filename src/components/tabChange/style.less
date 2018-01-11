@@ -1,0 +1,74 @@
+.tab-change{
+  position: relative;
+  left:0;
+  top:0;
+  .tab-title-wrap{
+    display: flex;
+    span{
+      flex: 1;
+      &.active{
+        color: lightseagreen;
+      }
+    }
+  }
+  .tab_item_wrap{
+    position: relative;
+    width:100%;
+    &>div{
+      position: relative;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width:100%;
+      transform: translateX(-100%);
+    }
+    .rightShow{
+      animation: slideRightShow 0.5s forwards;
+    }
+    .rightHide{
+      animation: slideRightHide 0.5s forwards;
+    }
+    .leftShow{
+      animation: slideLeftShow 0.5s forwards;
+    }
+    .leftHide{
+      animation: slideLeftHide 0.5s forwards;
+    }
+  }
+
+  @keyframes slideRightShow {
+    0% {
+      -webkit-transform: translate(100%, 0);
+    }
+    100% {
+      -webkit-transform: translate(0, 0);
+    }
+  }
+
+  @keyframes slideRightHide {
+    0% {
+      -webkit-transform: translate(0, 0);
+    }
+    100% {
+      -webkit-transform: translate(100%, 0);
+    }
+  }
+
+  @keyframes slideLeftShow {
+    0% {
+      -webkit-transform: translate(-100%, 0);
+    }
+    100% {
+      -webkit-transform: translate(0, 0);
+    }
+  }
+
+  @keyframes slideLeftHide {
+    0% {
+      -webkit-transform: translate(0, 0);
+    }
+    100% {
+      -webkit-transform: translate(-100%, 0);
+    }
+  }
+}
