@@ -13,25 +13,29 @@
   }
   .tab_item_wrap{
     position: relative;
-    width:100%;
+    width:300%;
     &>div{
-      position: relative;
+      position: absolute;
       left: 0;
       top: 0;
-      bottom: 0;
-      width:100%;
+      width:33.3333%;
+      float: left;
       transform: translateX(-100%);
     }
-    .rightShow{
+    .leftShow{
+      position: relative;
+      transform: translate(0, 0);
+    }
+    .tab-change-rightShow{
       animation: slideRightShow 0.5s forwards;
     }
-    .rightHide{
+    .tab-change-rightHide{
       animation: slideRightHide 0.5s forwards;
     }
-    .leftShow{
+    .tab-change-leftShow{
       animation: slideLeftShow 0.5s forwards;
     }
-    .leftHide{
+    .tab-change-leftHide{
       animation: slideLeftHide 0.5s forwards;
     }
   }

@@ -19,8 +19,8 @@
       return {
         tabTitle: [],
         tabLength: 0,
-        preShowTab: 0,
-        nextShowTab: 0,
+        preShowTab: 0, // 当前index
+        nextShowTab: 0, // 下一个index
         soltEel: []
       };
     },
@@ -37,38 +37,82 @@
         }
       });
       this.tabSwitch(0, 'first');
+      // this.touchSlideaChange();
     },
     methods: {
       tabSwitch (index, type) {
         this.preShowTab = this.nextShowTab;
         this.nextShowTab = index;
         const pages = this.soltEel;
+        // 初始化，展示第一个tab
         if (type) {
-          pages[0].className = 'leftShow';
+          pages[0].classList.add('leftShow');
           return;
         }
         let preIndex = this.preShowTab;
         let nextIndex = this.nextShowTab;
-        pages.forEach((item, index) => {
-          item.className = '';
-          if (nextIndex !== index) {
-            item.style.height === 0;
-          } else {
-            item.style.height === 'auto';
-          }
-        });
         if (preIndex === nextIndex) { return; }
+        // 计算前后tab的高度，取高的赋值给父节点的高度( 或者方案二：取最高子节点的高度？ 以后可根据需求来改)
+        let preHeigth = this.childrenHeight(pages[preIndex]);
+        let nextHeight = this.childrenHeight(pages[nextIndex]);
+        this.$refs.tabChange.style.height = (preHeigth > nextHeight ? preHeigth : nextHeight) + 'px';
+        if (pages[0].classList.contains('leftShow')) {
+          pages[0].classList.remove('leftShow');
+        }
+        // 清除动画类
+        pages.forEach((item, index) => {
+          let className = item.className.split(' ');
+          className.forEach(names => {
+            if (names.indexOf('tab-change-') !== -1) {
+              console.info(names);
+              item.classList.remove(names);
+            }
+          });
+        });
         if (preIndex > nextIndex) {
           // 后面跳前面 页面往右隐藏
-          pages[preIndex].className = 'rightHide';
-          pages[nextIndex].className = 'leftShow';
+          pages[preIndex].className = 'tab-change-rightHide';
+          pages[nextIndex].className = 'tab-change-leftShow';
         } else {
           // 前面跳后面 页面往左隐藏
           console.info(pages[preIndex]);
           console.info(pages[nextIndex]);
-          pages[preIndex].className = 'leftHide';
-          pages[nextIndex].className = 'rightShow';
+          pages[preIndex].className = 'tab-change-leftHide';
+          pages[nextIndex].className = 'tab-change-rightShow';
         }
+      },
+      touchSlideaChange () {
+        const wrap = this.$refs.tabChange;
+        let startTouch = 0;
+        let endTouch = 0;
+        let dis = 0;
+        let nestIndexPage = 0;
+        // const wrapWidth = wrap.offsetWidth;
+        wrap.addEventListener('touchstart', e => {
+          startTouch = e.changedTouches[0].pageX;
+        });
+        wrap.addEventListener('touchmove', e => {
+          endTouch = e.changedTouches[0].pageX;
+          dis = endTouch - startTouch;
+          // dis 大于0，则是往后滑动，内容往前显示
+          nestIndexPage = dis > 0 ? this.preShowTab - 1 : this.preShowTab + 1;
+          if (nestIndexPage < 0) { return; }
+          const pages = this.soltEel;
+          console.info(nestIndexPage);
+          pages[nestIndexPage].style.transform = `translateX(${dis}px)`;
+          pages[this.preShowTab].style.transform = `translateX(${dis}px)`;
+          pages[nestIndexPage].style.transform = `translateX(${dis}px)`;
+        });
+      },
+      childrenHeight (ele) {
+        let children = ele.children;
+        let height = 0;
+        for (let i = 0, len = children.length; i < len; i++) {
+          if (children[i].nodeType === 1) {
+            height += children[i].offsetHeight;
+          }
+        }
+        return height;
       }
     }
   };

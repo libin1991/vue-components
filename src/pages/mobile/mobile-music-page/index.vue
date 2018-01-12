@@ -29,17 +29,24 @@
       </div>
       <div id="tab">
         <TabChange>
-          <div class="tab"  name="全部">
+          <div class="tab"  name="全部" style="background-color: red">
             <div>全部</div>
+            <div>全部</div>
+            <div>全部</div>
+            <div>全部</div>
+            <div>全部</div>
+            <div>全部</div>
+            <div>全部</div>
+            <div>全部</div><div>全部</div>
           </div>
-          <div class="tab" name="内地">
-            <div>内地</div>
+          <div class="tab" name="内地" style="background-color: lightgreen">
+            <div>内地</div><div>内地</div><div>内地</div><div>内地</div><div>内地</div>
           </div>
-          <div class="tab" name="港台">
-            <div>港台</div>
+          <div class="tab" name="港台" style="background-color: sandybrown">
+            <div>港台</div><div>港台</div><div>港台</div><div>港台</div>
           </div>
-          <div class="tab" name="欧美">
-            <div>欧美</div>
+          <div class="tab" name="欧美" style="background-color: green">
+            <div>欧美</div><div>欧美</div><div>欧美</div><div>欧美</div><div>欧美</div><div>欧美</div><div>欧美</div>
           </div>
         </TabChange>
       </div>
