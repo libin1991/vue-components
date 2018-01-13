@@ -13,7 +13,8 @@
 </template>
 
 <script>
-  // import Event from '../../util';
+  import Event from '../../util';
+
   export default {
     data () {
       return {
@@ -52,31 +53,19 @@
         let preIndex = this.preShowTab;
         let nextIndex = this.nextShowTab;
         if (preIndex === nextIndex) { return; }
-        // 计算前后tab的高度，取高的赋值给父节点的高度( 或者方案二：取最高子节点的高度？ 以后可根据需求来改)
-        let preHeigth = this.childrenHeight(pages[preIndex]);
-        let nextHeight = this.childrenHeight(pages[nextIndex]);
-        this.$refs.tabChange.style.height = (preHeigth > nextHeight ? preHeigth : nextHeight) + 'px';
+        // 设置父节点高度
+        this.wrapHeight(pages, preIndex, nextIndex);
         if (pages[0].classList.contains('leftShow')) {
           pages[0].classList.remove('leftShow');
         }
         // 清除动画类
-        pages.forEach((item, index) => {
-          let className = item.className.split(' ');
-          className.forEach(names => {
-            if (names.indexOf('tab-change-') !== -1) {
-              console.info(names);
-              item.classList.remove(names);
-            }
-          });
-        });
+        this.removeAnimClass(pages);
         if (preIndex > nextIndex) {
           // 后面跳前面 页面往右隐藏
           pages[preIndex].className = 'tab-change-rightHide';
           pages[nextIndex].className = 'tab-change-leftShow';
         } else {
           // 前面跳后面 页面往左隐藏
-          console.info(pages[preIndex]);
-          console.info(pages[nextIndex]);
           pages[preIndex].className = 'tab-change-leftHide';
           pages[nextIndex].className = 'tab-change-rightShow';
         }
@@ -86,22 +75,49 @@
         let startTouch = 0;
         let endTouch = 0;
         let dis = 0;
-        let nestIndexPage = 0;
-        // const wrapWidth = wrap.offsetWidth;
+        let nextIndexPage = 0;
+        const pages = this.soltEel;
+        const wrapWidth = wrap.offsetWidth / 3;
+        let flag = true;
         wrap.addEventListener('touchstart', e => {
           startTouch = e.changedTouches[0].pageX;
+          flag = true;
         });
         wrap.addEventListener('touchmove', e => {
           endTouch = e.changedTouches[0].pageX;
           dis = endTouch - startTouch;
-          // dis 大于0，则是往后滑动，内容往前显示
-          nestIndexPage = dis > 0 ? this.preShowTab - 1 : this.preShowTab + 1;
-          if (nestIndexPage < 0) { return; }
-          const pages = this.soltEel;
-          console.info(nestIndexPage);
-          pages[nestIndexPage].style.transform = `translateX(${dis}px)`;
-          pages[this.preShowTab].style.transform = `translateX(${dis}px)`;
-          pages[nestIndexPage].style.transform = `translateX(${dis}px)`;
+          // dis 大于0，手指往左滑动
+          nextIndexPage = dis > 0 ? this.preShowTab - 1 : this.preShowTab + 1;
+          if (nextIndexPage < 0 || nextIndexPage > pages.length) { return; }
+          this.removeAnimClass(pages);
+          // 设置父节点高度
+          this.wrapHeight(pages, this.preShowTab, nextIndexPage);
+          if (flag) {
+            if (dis < 0) {
+              Event.cssTransform(pages[nextIndexPage], 'translateX', wrapWidth);
+            }
+          }
+          let translatePercent = wrapWidth + dis;
+          Event.cssTransform(pages[this.preShowTab], 'translateX', dis);
+          Event.cssTransform(pages[nextIndexPage], 'translateX', translatePercent);
+          flag = false;
+        });
+        wrap.addEventListener('touchend', e => {
+          if (nextIndexPage < 0 || nextIndexPage > pages.length) { return; }
+          let isMoveHalf = Math.abs(dis / wrapWidth) > 0.5 ? 1 : 0;
+          pages[this.preShowTab].style.transition = '0.5s';
+          pages[nextIndexPage].style.transition = '0.5s';
+          console.info(pages[nextIndexPage]);
+          if (isMoveHalf) {
+            // 如果滑动超过一半 则翻页
+            Event.cssTransform(pages[nextIndexPage], 'translateX', 1);
+            Event.cssTransform(pages[this.preShowTab], 'translateX', -wrapWidth);
+            this.preShowTab = nextIndexPage;
+          } else {
+            // 如果滑动未超过一半 返回原状
+            Event.cssTransform(pages[nextIndexPage], 'translateX', wrapWidth);
+            Event.cssTransform(pages[this.preShowTab], 'translateX', 1);
+          }
         });
       },
       childrenHeight (ele) {
@@ -113,6 +129,22 @@
           }
         }
         return height;
+      },
+      wrapHeight (pages, preIndex, nextIndex) {
+        // 计算前后tab的高度，取高的赋值给父节点的高度( 或者方案二：取最高子节点的高度？ 以后可根据需求来改)
+        let preHeigth = this.childrenHeight(pages[preIndex]);
+        let nextHeight = this.childrenHeight(pages[nextIndex]);
+        this.$refs.tabChange.style.height = (preHeigth > nextHeight ? preHeigth : nextHeight) + 'px';
+      },
+      removeAnimClass (pages) {
+        pages.forEach((item, index) => {
+          let className = item.className.split(' ');
+          className.forEach(names => {
+            if (names.indexOf('tab-change-') !== -1) {
+              item.classList.remove(names);
+            }
+          });
+        });
       }
     }
   };
