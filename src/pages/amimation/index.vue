@@ -2,6 +2,7 @@
   <div class="mobile-relative">
     <div class="left">
       <router-link :to="{name:'plusMinusAnim'}" tag="a">正负旋转相消动画</router-link>
+      <router-link :to="{name:'cube'}" tag="a">立方体</router-link>
     </div>
     <div class="right">
       <router-view></router-view>
@@ -23,6 +24,13 @@
       bottom: 0;
       border-right:1px solid #000;
       box-sizing: border-box;
+      a{
+        display: block;
+        width:100%;
+        font-size: 16px;
+        padding:10px 0;
+        border-bottom: 1px solid #ccc;
+      }
     }
     .right{
       position: absolute;
