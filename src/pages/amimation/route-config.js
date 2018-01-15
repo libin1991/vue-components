@@ -1,5 +1,6 @@
 import PlusMinusAnim from './plus-minus-animation';
 import Cube from './transform3D';
+import BackfaceVisibility from './backface-visibility';
 
 export default [
   {
@@ -11,5 +12,10 @@ export default [
     path: 'cube',
     name: 'cube',
     component: Cube
+  },
+  {
+    path: 'backface-visibility',
+    name: 'backfaceVisibility',
+    component: BackfaceVisibility
   }
 ];

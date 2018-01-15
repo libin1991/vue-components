@@ -3,6 +3,7 @@
     <div class="left">
       <router-link :to="{name:'plusMinusAnim'}" tag="a">正负旋转相消动画</router-link>
       <router-link :to="{name:'cube'}" tag="a">立方体</router-link>
+      <router-link :to="{name:'backfaceVisibility'}" tag="a">旋转背面隐藏</router-link>
     </div>
     <div class="right">
       <router-view></router-view>
