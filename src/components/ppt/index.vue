@@ -40,6 +40,8 @@
       this.wrap.addEventListener('touchstart', e => {
         e.preventDefault();
       });
+      // 设置translateZ，一定要赋值，这样才能启动3D加速
+      Event.cssTransform(this.wrapUl, 'translateZ', 0.01);
       Event.cssTransform(this.wrapUl, 'translateX', 0);
       this.slideInit();
       this.autoChange();

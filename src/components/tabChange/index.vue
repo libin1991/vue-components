@@ -79,6 +79,8 @@
         const pages = this.soltEel;
         const wrapWidth = wrap.offsetWidth / 3;
         let flag = true;
+        // 设置translateZ，一定要赋值，这样才能启动3D加速
+        Event.cssTransform(wrap, 'translateZ', 0.01);
         wrap.addEventListener('touchstart', e => {
           startTouch = e.changedTouches[0].pageX;
           flag = true;
