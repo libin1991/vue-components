@@ -65,6 +65,16 @@
         滑动第二部分最后一个图片时，跳到第一部分最后一个图片
         某一个图片，滑动未超过一半，幻灯片不切换，是根据transformX/图片宽度
         通过四舍五入获取nowIndex的值，再调用cssTransform()方法来计算的 */
+
+        /* 如果在webkit内核下的浏览器 出现transition的闪烁问题：
+          解决办法：
+            1. 给运动元素 开启3d加速
+            2. 给运动元素本身加上 ：
+              -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+            3.给运动元素的父级加：
+              -webkit-transform-style: preserve-3d;
+                transform-style: preserve-3d; */
         const wrapEle = this.wrap;
         const wrapUl = this.wrapUl;
         const liWidth = wrapEle.offsetWidth;
