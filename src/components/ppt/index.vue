@@ -126,6 +126,8 @@
     width:100%;
     height:100%;
     overflow:hidden;
+    /*防止transition出现闪屏*/
+    transform-style: preserve-3d;
     ul{
       position: relative;
       left:0;
@@ -133,6 +135,8 @@
       bottom:0;
       margin:0;
       padding:0;
+      /*防止transition出现闪屏*/
+      backface-visibility: hidden;
       li{
         display: inline-block;
         float: left;
