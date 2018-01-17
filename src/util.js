@@ -6,7 +6,7 @@ export default class Event {
     }
     elem.addEventListener(type, function (e) {
       if (selector) {   // 使用代理
-        var target = e.target;
+        let target = e.target;
         if (target.matches(selector)) {
           fn.call(target, e);
         }
@@ -21,8 +21,8 @@ export default class Event {
     }
     if (arguments.length > 2) {
       el.transform[attr] = val;
-      var sVal = '';
-      for (var s in el.transform) {
+      let sVal = '';
+      for (let s in el.transform) {
         switch (s) {
           case 'rotate':
           case 'rotateX':
@@ -56,5 +56,99 @@ export default class Event {
       }
       return val;
     }
+  }
+
+  static mscroll (wrap) {
+    const child = wrap.children[0];
+    let startPoint = 0;
+    let startY = 0;
+    let minY = wrap.clientHeight - child.offsetHeight;
+    let step = 1;
+    let lastY = 0;
+    let lastTime = 0;
+    let lastDis = 0;
+    let lastTimeDis = 1;
+    this.cssTransform(child, 'translateZ', 0.01);
+    wrap.addEventListener(
+      'touchstart', (e) => {
+        clearInterval(child.scroll);
+        startPoint = e.changedTouches[0].pageY;
+        startY = this.cssTransform(child, 'translateY');
+        step = 1;
+        lastY = startPoint;
+        lastTime = new Date().getTime();
+        lastDis = 0;
+        lastTimeDis = 1;
+      }
+    );
+    wrap.addEventListener(
+      'touchmove', (e) => {
+        let nowPoint = e.changedTouches[0].pageY;
+        let dis = nowPoint - startPoint;
+        let t = startY + dis;
+        let nowTime = new Date().getTime();
+        if (t > 0) {
+          step = 1 - t / wrap.clientHeight;
+          t = parseInt(t * step);
+        }
+        if (t < minY) {
+          let over = minY - t;
+          step = 1 - over / wrap.clientHeight;
+          over = parseInt(over * step);
+          t = minY - over;
+        }
+        lastDis = nowPoint - lastY;
+        lastTimeDis = nowTime - lastTime;
+        lastY = nowPoint;
+        lastTime = nowTime;
+        this.cssTransform(child, 'translateY', t);
+      }
+    );
+    wrap.addEventListener(
+      'touchend', () => {
+        let speed = (lastDis / lastTimeDis) * 120;
+        let t = this.cssTransform(child, 'translateY');
+        let target = t + speed;
+        let type = 'easeOut';
+        let time = Math.abs(speed * 10);
+        time = time < 300 ? 300 : time;
+        if (target > 0) {
+          target = 0;
+          type = 'backOut';
+        }
+        if (target < minY) {
+          target = minY;
+          type = 'backOut';
+        }
+        this.move(target, time, type, child);
+      }
+    );
+  }
+  static move (target, time, type, child) {
+    const Tween = {
+      easeOut (t, b, c, d) {
+        return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+      },
+      backOut (t, b, c, d, s) {
+        if (typeof s === 'undefined') {
+          s = 1.70158;
+        }
+        return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
+      }
+    };
+    let t = 0;
+    let b = this.cssTransform(child, 'translateY');
+    let c = target - b;
+    let d = Math.ceil(time / 20);
+    clearInterval(child.scroll);
+    child.scroll = setInterval(() => {
+      t++;
+      if (t > d) {
+        clearInterval(child.scroll);
+      } else {
+        let top = Tween[type](t, b, c, d);
+        this.cssTransform(child, 'translateY', top);
+      }
+    }, 20);
   }
 }

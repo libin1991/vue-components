@@ -1,126 +1,34 @@
 <template>
   <div class="mobile-slip">
-    <div id="wrap">
-      <div id="scroll">
-        start<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        移动端滑屏<br/>
-        end<br/>
-      </div>
-    </div>
+      <div id="scroll"></div>
   </div>
 </template>
 
 <script>
+  import Utils from '../../../util';
   export default {
     data () {
       return {};
     },
     mounted () {
-      this.slip();
+      // this.slip();
+      document.addEventListener(
+        'touchstart', (e) => {
+          e.preventDefault();
+        });
+      this.setInner();
+      const wrap = document.querySelector('.mobile-slip');
+      Utils.mscroll(wrap);
     },
     methods: {
+      setInner () {
+        var scroll = document.querySelector('#scroll');
+        var inner = '';
+        for (let i = 0; i < 300; i++) {
+          inner += '移动端滑屏' + i + '<br/>';
+        }
+        scroll.innerHTML = inner;
+      },
       slip () {
         /* 1 手指按下去的时候，记录下手指坐标
         2.移动的时候，记录手指坐标
@@ -155,27 +63,17 @@
 </script>
 
 <style lang="less">
-  html {
-    height: 100%;
-  }
   body {
     margin: 0;
+  }
+  body,
+  html {
     height: 100%;
-    position: relative;
     overflow: hidden;
   }
-  #wrap {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
+  .mobile-slip{
     height: 100%;
-  }
-  #scroll {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    background: #ccc;
+    overflow: hidden;
+    position: relative;
   }
 </style>
