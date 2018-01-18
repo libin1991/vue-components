@@ -136,10 +136,10 @@ export default class Event {
         return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
       }
     };
-    let t = 0;
-    let b = this.cssTransform(child, 'translateY');
-    let c = target - b;
-    let d = Math.ceil(time / 20);
+    let t = 0;        // 第0次
+    let b = this.cssTransform(child, 'translateY');      // 当前位置
+    let c = target - b;               // 目标点-当前位置 = 移动距离
+    let d = Math.ceil(time / 20);     // time为执行总时间/ 20ms执行一次 = 执行次数
     clearInterval(child.scroll);
     child.scroll = setInterval(() => {
       t++;

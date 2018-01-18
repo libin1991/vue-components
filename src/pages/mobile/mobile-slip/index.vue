@@ -1,6 +1,6 @@
 <template>
-  <div class="mobile-slip">
-      <div id="scroll"></div>
+  <div class="mobile-slip" ref="wrap">
+      <div id="scroll" ref="scroll"></div>
   </div>
 </template>
 
@@ -11,19 +11,21 @@
       return {};
     },
     mounted () {
-      // this.slip();
       document.addEventListener(
         'touchstart', (e) => {
           e.preventDefault();
         });
-      this.setInner();
-      const wrap = document.querySelector('.mobile-slip');
-      Utils.mscroll(wrap);
+      const wrap = this.$refs.wrap;
+      const scroll = this.$refs.scroll;
+      this.setInner(scroll);
+      setTimeout(() => {
+        // console.info(wrap.clientHeight, scroll.offsetHeight);
+        Utils.mscroll(wrap);
+      }, 10);
     },
     methods: {
-      setInner () {
-        var scroll = document.querySelector('#scroll');
-        var inner = '';
+      setInner (scroll) {
+        let inner = '';
         for (let i = 0; i < 300; i++) {
           inner += '移动端滑屏' + i + '<br/>';
         }
@@ -72,8 +74,14 @@
     overflow: hidden;
   }
   .mobile-slip{
-    height: 100%;
+    width:100%;
     overflow: hidden;
+    position: absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    /*height:100%;
     position: relative;
+    overflow: hidden;*/
   }
 </style>

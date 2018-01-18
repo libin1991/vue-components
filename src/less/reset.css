@@ -31,9 +31,6 @@ body {
   line-height:1;
 }
 
-:focus {
-  outline: 1;
-}
 
 article,aside,canvas,details,figcaption,figure,
 footer,header,hgroup,menu,nav,section,summary {
