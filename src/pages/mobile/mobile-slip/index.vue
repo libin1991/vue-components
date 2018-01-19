@@ -1,6 +1,7 @@
 <template>
   <div class="mobile-slip" ref="wrap">
-      <div id="scroll" ref="scroll"></div>
+    <div id="scroll" ref="scroll"></div>
+    <div id="scrollBar" ref="scrollBar"></div>
   </div>
 </template>
 
@@ -17,10 +18,25 @@
         });
       const wrap = this.$refs.wrap;
       const scroll = this.$refs.scroll;
+      const scrollBar = this.$refs.scrollBar;
       this.setInner(scroll);
       setTimeout(() => {
         // console.info(wrap.clientHeight, scroll.offsetHeight);
-        Utils.mscroll(wrap);
+        const scale = wrap.clientHeight / scroll.offsetHeight;
+        scrollBar.style.height = wrap.clientHeight * scale + 'px';
+        Utils.mscroll(wrap, {
+          start () {
+            scrollBar.style.opacity = 1;
+          },
+          in () {
+            let top = -Utils.cssTransform(scroll, 'translateY') * scale;
+            console.info(top);
+            Utils.cssTransform(scrollBar, 'translateY', top);
+          },
+          over () {
+            scrollBar.style.opacity = 0;
+          }
+        });
       }, 10);
     },
     methods: {
@@ -80,6 +96,16 @@
     top:0;
     left:0;
     bottom:0;
+    #scrollBar{
+      position: absolute;
+      right: 0;
+      top:0;
+      width:4px;
+      height:100%;
+      background: rgba(0,0,0,.5);
+      opacity:0;
+      transition:opacity .5s  linear;
+    }
     /*height:100%;
     position: relative;
     overflow: hidden;*/

@@ -58,7 +58,7 @@ export default class Event {
     }
   }
 
-  static mscroll (wrap) {
+  static mscroll (wrap, callback) {
     const child = wrap.children[0];
     let startPoint = 0;
     let startY = 0;
@@ -68,24 +68,42 @@ export default class Event {
     let lastTime = 0;
     let lastDis = 0;
     let lastTimeDis = 1;
+    let isMove = true;
+    let isFirst = true;
     this.cssTransform(child, 'translateZ', 0.01);
     wrap.addEventListener(
       'touchstart', (e) => {
         clearInterval(child.scroll);
-        startPoint = e.changedTouches[0].pageY;
+        if (callback && callback.start) {
+          callback.start();
+        }
+        startPoint = {pageY: e.changedTouches[0].pageY, pageX: e.changedTouches[0].pageX};
         startY = this.cssTransform(child, 'translateY');
         step = 1;
-        lastY = startPoint;
+        lastY = startPoint.pageY;
         lastTime = new Date().getTime();
         lastDis = 0;
         lastTimeDis = 1;
+        isMove = true;
+        isFirst = true;
       }
     );
     wrap.addEventListener(
       'touchmove', (e) => {
-        let nowPoint = e.changedTouches[0].pageY;
-        let dis = nowPoint - startPoint;
-        let t = startY + dis;
+        if (!isMove) {
+          return;
+        }
+        let nowPoint = e.changedTouches[0];
+        let disX = nowPoint.pageX - startPoint.pageX;
+        let disY = nowPoint.pageY - startPoint.pageY;
+        if (isFirst) {
+          isFirst = false;
+          if (Math.abs(disY) < Math.abs(disX)) {
+            isMove = false;
+            return;
+          }
+        }
+        let t = startY + disY;
         let nowTime = new Date().getTime();
         if (t > 0) {
           step = 1 - t / wrap.clientHeight;
@@ -97,9 +115,9 @@ export default class Event {
           over = parseInt(over * step);
           t = minY - over;
         }
-        lastDis = nowPoint - lastY;
+        lastDis = nowPoint.pageY - lastY;
         lastTimeDis = nowTime - lastTime;
-        lastY = nowPoint;
+        lastY = nowPoint.pageY;
         lastTime = nowTime;
         this.cssTransform(child, 'translateY', t);
       }
@@ -107,6 +125,7 @@ export default class Event {
     wrap.addEventListener(
       'touchend', () => {
         let speed = (lastDis / lastTimeDis) * 120;
+        speed = isNaN(speed) ? 0 : speed;
         let t = this.cssTransform(child, 'translateY');
         let target = t + speed;
         let type = 'easeOut';
@@ -120,11 +139,11 @@ export default class Event {
           target = minY;
           type = 'backOut';
         }
-        this.move(target, time, type, child);
+        this.move(target, time, type, child, callback);
       }
     );
   }
-  static move (target, time, type, child) {
+  static move (target, time, type, child, callback) {
     const Tween = {
       easeOut (t, b, c, d) {
         return -c * ((t = t / d - 1) * t * t * t - 1) + b;
@@ -145,9 +164,15 @@ export default class Event {
       t++;
       if (t > d) {
         clearInterval(child.scroll);
+        if (callback && callback.over) {
+          callback.over();
+        }
       } else {
         let top = Tween[type](t, b, c, d);
         this.cssTransform(child, 'translateY', top);
+        if (callback && callback.in) {
+          callback.in();
+        }
       }
     }, 20);
   }
