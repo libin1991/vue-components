@@ -59,17 +59,19 @@ export default class Event {
   }
 
   static mscroll (wrap, callback) {
+    // 传过来的是最外面一层容器，首先获取滑动的子元素
     const child = wrap.children[0];
-    let startPoint = 0;
-    let startY = 0;
+    let startPoint = 0;   // 手指
+    let startY = 0;     // 元素
     let minY = wrap.clientHeight - child.offsetHeight;
-    let step = 1;
+    let step = 1;    // 计算速度用
     let lastY = 0;
     let lastTime = 0;
     let lastDis = 0;
     let lastTimeDis = 1;
-    let isMove = true;
+    let isMove = true;    // 用来辨别是否是向下滑动，可能是左右滑动
     let isFirst = true;
+    // 使用3D硬件加速
     this.cssTransform(child, 'translateZ', 0.01);
     wrap.addEventListener(
       'touchstart', (e) => {
@@ -96,6 +98,8 @@ export default class Event {
         let nowPoint = e.changedTouches[0];
         let disX = nowPoint.pageX - startPoint.pageX;
         let disY = nowPoint.pageY - startPoint.pageY;
+        // 此时添加isFirst，做优化，不用touchmove触发的时候都执行判断，只判断第一次
+        // 如果横向距离大于纵向距离，那就不滚动了
         if (isFirst) {
           isFirst = false;
           if (Math.abs(disY) < Math.abs(disX)) {
@@ -124,17 +128,21 @@ export default class Event {
     );
     wrap.addEventListener(
       'touchend', () => {
+        // 调试速度
         let speed = (lastDis / lastTimeDis) * 120;
+        // 速度有时候为NaN（lastTimeDis为0的时候？）
         speed = isNaN(speed) ? 0 : speed;
         let t = this.cssTransform(child, 'translateY');
         let target = t + speed;
         let type = 'easeOut';
         let time = Math.abs(speed * 10);
         time = time < 300 ? 300 : time;
+        // 顶部，还往下滑动，有一个回弹效果
         if (target > 0) {
           target = 0;
           type = 'backOut';
         }
+        // 最下边滑过了，有回弹效果
         if (target < minY) {
           target = minY;
           type = 'backOut';
@@ -174,6 +182,6 @@ export default class Event {
           callback.in();
         }
       }
-    }, 20);
+    }, 20);  // 20ms 执行一次
   }
 }
