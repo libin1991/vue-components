@@ -15,7 +15,7 @@
       document.addEventListener(
         'touchstart', (e) => {
           e.preventDefault();
-        });
+        }, { passive: false });
       const wrap = this.$refs.wrap;
       const scroll = this.$refs.scroll;
       const scrollBar = this.$refs.scrollBar;
@@ -24,19 +24,19 @@
         // console.info(wrap.clientHeight, scroll.offsetHeight);
         const scale = wrap.clientHeight / scroll.offsetHeight;
         scrollBar.style.height = wrap.clientHeight * scale + 'px';
-        Utils.mscroll(wrap, {
+        const scrollEve = new Utils(wrap, {
           start () {
             scrollBar.style.opacity = 1;
           },
           in () {
             let top = -Utils.cssTransform(scroll, 'translateY') * scale;
-            console.info(top);
             Utils.cssTransform(scrollBar, 'translateY', top);
           },
           over () {
             scrollBar.style.opacity = 0;
           }
         });
+        scrollEve.mscroll();
       }, 10);
     },
     methods: {
@@ -92,10 +92,9 @@
   .mobile-slip{
     width:100%;
     overflow: hidden;
-    position: absolute;
-    top:0;
-    left:0;
-    bottom:0;
+    height:100%;
+    position: relative;
+    overflow: hidden;
     #scrollBar{
       position: absolute;
       right: 0;

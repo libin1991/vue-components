@@ -1,4 +1,10 @@
 export default class Event {
+  constructor (wrap, callback) {
+    this.wrap = wrap;
+    this.callback = callback;
+    this.cssTransform = Object.getPrototypeOf(this).constructor.cssTransform;
+  }
+  // 事件委托、绑定函数
   static bindEvent (elem, type, selector, fn) {
     if (fn == null) {    // 如果不使用代理
       fn = selector;
@@ -15,6 +21,7 @@ export default class Event {
       }
     });
   }
+
   static cssTransform (el, attr, val) {
     if (!el.transform) {
       el.transform = {};
@@ -58,26 +65,26 @@ export default class Event {
     }
   }
 
-  static mscroll (wrap, callback) {
+  mscroll () {
     // 传过来的是最外面一层容器，首先获取滑动的子元素
-    const child = wrap.children[0];
+    const child = this.wrap.children[0];
     let startPoint = 0;   // 手指
     let startY = 0;     // 元素
-    let minY = wrap.clientHeight - child.offsetHeight;
+    let minY = this.wrap.clientHeight - child.offsetHeight;
     let step = 1;    // 计算速度用
     let lastY = 0;
     let lastTime = 0;
     let lastDis = 0;
     let lastTimeDis = 1;
-    let isMove = true;    // 用来辨别是否是向下滑动，可能是左右滑动
+    let isMove = true;    // 滑动状态
     let isFirst = true;
     // 使用3D硬件加速
     this.cssTransform(child, 'translateZ', 0.01);
-    wrap.addEventListener(
+    this.wrap.addEventListener(
       'touchstart', (e) => {
         clearInterval(child.scroll);
-        if (callback && callback.start) {
-          callback.start();
+        if (this.callback && this.callback.start) {
+          this.callback.start();
         }
         startPoint = {pageY: e.changedTouches[0].pageY, pageX: e.changedTouches[0].pageX};
         startY = this.cssTransform(child, 'translateY');
@@ -90,7 +97,7 @@ export default class Event {
         isFirst = true;
       }
     );
-    wrap.addEventListener(
+    this.wrap.addEventListener(
       'touchmove', (e) => {
         if (!isMove) {
           return;
@@ -110,12 +117,12 @@ export default class Event {
         let t = startY + disY;
         let nowTime = new Date().getTime();
         if (t > 0) {
-          step = 1 - t / wrap.clientHeight;
+          step = 1 - t / this.wrap.clientHeight;
           t = parseInt(t * step);
         }
         if (t < minY) {
           let over = minY - t;
-          step = 1 - over / wrap.clientHeight;
+          step = 1 - over / this.wrap.clientHeight;
           over = parseInt(over * step);
           t = minY - over;
         }
@@ -126,7 +133,7 @@ export default class Event {
         this.cssTransform(child, 'translateY', t);
       }
     );
-    wrap.addEventListener(
+    this.wrap.addEventListener(
       'touchend', () => {
         // 调试速度
         let speed = (lastDis / lastTimeDis) * 120;
@@ -147,11 +154,11 @@ export default class Event {
           target = minY;
           type = 'backOut';
         }
-        this.move(target, time, type, child, callback);
+        this.move(target, time, type, child);
       }
     );
   }
-  static move (target, time, type, child, callback) {
+  move (target, time, type, child) {
     const Tween = {
       easeOut (t, b, c, d) {
         return -c * ((t = t / d - 1) * t * t * t - 1) + b;
@@ -172,14 +179,14 @@ export default class Event {
       t++;
       if (t > d) {
         clearInterval(child.scroll);
-        if (callback && callback.over) {
-          callback.over();
+        if (this.callback && this.callback.over) {
+          this.callback.over();
         }
       } else {
         let top = Tween[type](t, b, c, d);
         this.cssTransform(child, 'translateY', top);
-        if (callback && callback.in) {
-          callback.in();
+        if (this.callback && this.callback.in) {
+          this.callback.in();
         }
       }
     }, 20);  // 20ms 执行一次

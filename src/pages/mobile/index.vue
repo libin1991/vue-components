@@ -9,6 +9,9 @@
 </script>
 
 <style lang="less">
+  .mobile-relative{
+    height:100%;
+  }
 /*.mobile-relative{
   .left{
     position: absolute;
