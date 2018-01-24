@@ -3,6 +3,7 @@ import MobileSlip from './mobile-slip';
 import MobilePPT from './mobile-ppt';
 import MobileMusic from './mobile-music-page';
 import PhotoAlbums from './photoAlbums';
+import Test from './test';
 
 export default [
   {
@@ -29,5 +30,10 @@ export default [
     path: 'photo-albums',
     name: 'photoAlbums',
     component: PhotoAlbums
+  },
+  {
+    path: 'test',
+    name: 'test',
+    component: Test
   }
 ];

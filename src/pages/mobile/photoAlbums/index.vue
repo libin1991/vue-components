@@ -71,7 +71,17 @@
       showImg (li) {
         var img = new Image();
         img.src = li.src;
-        li.appendChild(img);
+        img.onload = () => {
+          let canvas = document.createElement('canvas');
+          let ctx = canvas.getContext('2d');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          li.appendChild(canvas);
+          setTimeout(() => {
+            canvas.style.opacity = 1;
+          }, 100);
+        };
       }
     }
   };
@@ -119,10 +129,12 @@ header {
   border-radius: 5px;
   background: url('./img/loadingImg.gif') no-repeat #ccc center center;
 }
-.pics img {
+.pics canvas {
   display: block;
   width: 7rem;
   border-radius: 5px;
+  opacity: 0;
+  transition: 1s opacity;
 }
 footer {
   position: absolute;

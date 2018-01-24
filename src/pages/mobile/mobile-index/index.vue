@@ -4,6 +4,7 @@
     <router-link :to="{name:'mobilePPT'}" tag="a">幻灯片</router-link>
     <router-link :to="{name:'mobileMusic'}" tag="a">音悦台页面</router-link>
     <router-link :to="{name:'photoAlbums'}" tag="a">相册</router-link>
+    <router-link :to="{name:'test'}" tag="a">test</router-link>
   </div>
 </template>
 
