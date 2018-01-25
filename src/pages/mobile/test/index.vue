@@ -14,23 +14,27 @@
     methods: {
       promise () {
         this.doSomething().then(() => {
-          this.doSomethingElse();
+          return this.doSomethingElse();
         }).then(this.finalHandler);
       },
       doSomething () {
         return new Promise((resolve, reject) => {
-          resolve();
+          resolve('first');
         });
       },
       doSomethingElse () {
-        for (let i = 0; i < 20; i++) {
-          console.info(i);
-        }
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.info('ssss');
+            resolve('tt');
+          }, 1500);
+        });
       },
-      finalHandler () {
-        for (let i = 10; i < 20; i++) {
-          console.info('ss');
-        }
+      finalHandler (ss) {
+        console.info(ss);
+        setTimeout(() => {
+          console.info('aaaa');
+        }, 1000);
       }
     }
   };

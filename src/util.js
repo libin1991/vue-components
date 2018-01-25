@@ -71,6 +71,7 @@ export default class Event {
     let startPoint = 0;   // 手指
     let startY = 0;     // 元素
     let minY = this.wrap.clientHeight - child.offsetHeight;
+    // console.info(this.wrap, child);
     let step = 1;    // 计算速度用
     let lastY = 0;
     let lastTime = 0;
@@ -142,7 +143,7 @@ export default class Event {
         let t = this.cssTransform(child, 'translateY');
         let target = t + speed;
         let type = 'easeOut';
-        let time = Math.abs(speed * 10);
+        let time = Math.abs(speed * 0.9);
         time = time < 300 ? 300 : time;
         // 顶部，还往下滑动，有一个回弹效果
         if (target > 0) {
@@ -155,6 +156,9 @@ export default class Event {
           type = 'backOut';
         }
         this.move(target, time, type, child);
+        if (this.callback && this.callback.end) {
+          this.callback.end();
+        }
       }
     );
   }
