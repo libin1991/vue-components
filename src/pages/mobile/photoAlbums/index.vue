@@ -23,12 +23,14 @@
         start: 0,
         minTop: 0,
         maxTop: 0,
+        maxScroll: 0,
         wrap: {},
         child: {},
         pics: {},
         li: {},
         footer: {},
-        scroll: {}
+        scroll: {},
+        isLoad: false
       };
     },
     created () {
@@ -42,20 +44,48 @@
       this.pics = document.querySelector('.pics');
       this.li = this.pics.getElementsByTagName('li');
       this.footer = document.querySelector('footer');
+      Utils.cssTransform(this.footer, 'scale', 0);
       // 要获取图片是否进入了wrap，看图片的top是否在wrap范围之内
       // minTop 是wrap距离屏幕顶部的距离
       // maxTop 就是整个屏幕的高度
       this.minTop = this.wrap.getBoundingClientRect().top;
       this.maxTop = this.minTop + this.wrap.getBoundingClientRect().height;
-      Utils.cssTransform(this.footer, 'scale', 0);
       this.create();
       const self = this;
       // 此处要加setTimeout 页面内容未渲染 不然获取不到元素高度！！！！
       setTimeout(() => {
-        this.scroll = new Utils(this.wrap, {
-          start () {},
+        // 每次滑动最大距离
+        this.maxScroll = this.wrap.clientHeight - this.child.offsetHeight;
+        this.scroll = new Utils(self.wrap, {
+          start () {
+            let scrollTop = Utils.cssTransform(self.child, 'translateY');
+            // 此处需要重新计算maxScroll
+            self.maxScroll = self.wrap.clientHeight - self.child.offsetHeight;
+            if (scrollTop <= self.maxScroll) {
+              self.isLoad = true;
+            }
+          },
           in () {
             self.createImg();
+            let scrollTop = Utils.cssTransform(self.child, 'translateY');
+            if (self.isLoad) {
+              // 当滑动超出时，显示footer  使用scale方式显示
+              let overHieght = self.maxScroll - scrollTop;
+              let footScale = overHieght / self.footer.offsetHeight;
+              footScale = footScale > 1 ? 1 : footScale;
+              footScale = footScale < 0 ? 0 : footScale;
+              console.info(footScale);
+              Utils.cssTransform(self.footer, 'scale', footScale);
+            }
+          },
+          end () {
+            let scrollTop = Utils.cssTransform(self.child, 'translateY');
+            if (self.isLoad && self.maxScroll - scrollTop >= self.footer.offsetHeight) {
+              clearInterval(self.child.scroll);
+              self.start += self.length;
+              self.create();
+            }
+            self.isLoad = false;
           }
         });
         this.scroll.mscroll();
@@ -71,7 +101,6 @@
           li.isImg = false;
           this.pics.appendChild(li);
         }
-        this.start = this.end;
         this.createImg();
       },
       // 在创建的li里面添加img，但是要判断当前li是否在可视区 以及是否已添加过图片
@@ -155,16 +184,16 @@ body {
           }
         }
       }
+      footer {
+        position: absolute;
+        bottom: -80px;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        font: .7rem/80px "宋体";
+        text-align:  center;
+      }
     }
-  }
-  footer {
-    position: absolute;
-    bottom: -80px;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    font: .7rem/80px "宋体";
-    text-align:  center;
   }
 }
 

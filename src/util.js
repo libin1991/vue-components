@@ -2,6 +2,7 @@ export default class Event {
   constructor (wrap, callback) {
     this.wrap = wrap;
     this.callback = callback;
+    this.isLoad = false;
     this.cssTransform = Object.getPrototypeOf(this).constructor.cssTransform;
   }
   // 事件委托、绑定函数
@@ -83,6 +84,7 @@ export default class Event {
     this.cssTransform(child, 'translateZ', 0.01);
     this.wrap.addEventListener(
       'touchstart', (e) => {
+        minY = this.wrap.clientHeight - child.offsetHeight;
         clearInterval(child.scroll);
         if (this.callback && this.callback.start) {
           this.callback.start();
@@ -132,10 +134,15 @@ export default class Event {
         lastY = nowPoint.pageY;
         lastTime = nowTime;
         this.cssTransform(child, 'translateY', t);
+        // 此处也要添加in函数，不然弹性模型超出部分不执行in
+        if (this.callback && this.callback.in) {
+          this.callback.in();
+        }
       }
     );
     this.wrap.addEventListener(
       'touchend', () => {
+        minY = this.wrap.clientHeight - child.offsetHeight;
         // 调试速度
         let speed = (lastDis / lastTimeDis) * 120;
         // 速度有时候为NaN（lastTimeDis为0的时候？）
