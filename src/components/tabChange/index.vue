@@ -22,7 +22,8 @@
         tabLength: 0,
         preShowTab: 0, // 当前index
         nextShowTab: 0, // 下一个index
-        soltEel: []
+        soltEel: [],
+        itemWidth: 0
       };
     },
     mounted () {
@@ -30,45 +31,30 @@
         return item.tag;
       });
       this.tabLength = solt.length;
+      this.$refs.tabChange.style.width = this.tabLength * 100 + '%';
+      this.itemWidth = 1 / this.tabLength * 100;
       solt.forEach((item, index) => {
         if (item.tag) {
-          // item.elm.style.width = 1 / this.tabLength * 100 + '%';
+          item.elm.style.width = this.itemWidth + '%';
           this.tabTitle.push(item.data.attrs.name);
           this.soltEel.push(item.elm);
         }
       });
-      this.tabSwitch(0, 'first');
+      Event.cssTransform(this.$refs.tabChange, 'translateX', 0.01);
+      // this.tabSwitch(0, 'first');
       // this.touchSlideaChange();
     },
     methods: {
-      tabSwitch (index, type) {
+      tabSwitch (index) {
         this.preShowTab = this.nextShowTab;
         this.nextShowTab = index;
-        const pages = this.soltEel;
-        // 初始化，展示第一个tab
-        if (type) {
-          pages[0].classList.add('leftShow');
-          return;
-        }
         let preIndex = this.preShowTab;
         let nextIndex = this.nextShowTab;
         if (preIndex === nextIndex) { return; }
-        // 设置父节点高度
-        this.wrapHeight(pages, preIndex, nextIndex);
-        if (pages[0].classList.contains('leftShow')) {
-          pages[0].classList.remove('leftShow');
-        }
-        // 清除动画类
-        this.removeAnimClass(pages);
-        if (preIndex > nextIndex) {
-          // 后面跳前面 页面往右隐藏
-          pages[preIndex].className = 'tab-change-rightHide';
-          pages[nextIndex].className = 'tab-change-leftShow';
-        } else {
-          // 前面跳后面 页面往左隐藏
-          pages[preIndex].className = 'tab-change-leftHide';
-          pages[nextIndex].className = 'tab-change-rightShow';
-        }
+        let itemTransformX = -this.itemWidth * index;
+        itemTransformX = itemTransformX === 0 ? 0.01 : -this.itemWidth * index;
+        console.info(itemTransformX);
+        Event.cssTransform(this.$refs.tabChange, 'translateX', itemTransformX, 'percent');
       },
       touchSlideaChange () {
         const wrap = this.$refs.tabChange;

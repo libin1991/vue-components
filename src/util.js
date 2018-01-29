@@ -15,7 +15,7 @@ export default class Event {
       }
     });
   }
-  static cssTransform (el, attr, val) {
+  static cssTransform (el, attr, val, valType) {
     if (!el.transform) {
       el.transform = {};
     }
@@ -31,7 +31,11 @@ export default class Event {
             break;
           case 'translateX':
           case 'translateY':
-            attrs += `${s}(${el.transform[s]}px)`;
+            if (valType === 'percent') {
+              attrs += `${s}(${el.transform[s]}%)`;
+            } else {
+              attrs += `${s}(${el.transform[s]}px)`;
+            }
             break;
           case 'scaleX':
           case 'scaleY':
