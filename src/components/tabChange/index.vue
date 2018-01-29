@@ -1,6 +1,6 @@
 <template>
   <div class="tab-change">
-    <div class="tab-title-wrap" >
+    <div class="tab-title-wrap" ref="wrap">
       <span v-for="(item,index) in tabTitle"
         :class="{active : index===nextShowTab}"
         @click="tabSwitch(index)"
@@ -23,7 +23,8 @@
         preShowTab: 0, // 当前index
         nextShowTab: 0, // 下一个index
         soltEel: [],
-        itemWidth: 0
+        itemWidth: 0,
+        maxTranslateX: 0
       };
     },
     mounted () {
@@ -40,96 +41,54 @@
           this.soltEel.push(item.elm);
         }
       });
+      this.maxTranslateX = this.$refs.wrap.offsetWidth * (this.tabLength - 1);
       Event.cssTransform(this.$refs.tabChange, 'translateX', 0.01);
       // this.tabSwitch(0, 'first');
-      // this.touchSlideaChange();
+      this.touchSlideaChange();
     },
     methods: {
       tabSwitch (index) {
+        this.$refs.tabChange.style.transition = 'none';
         this.preShowTab = this.nextShowTab;
         this.nextShowTab = index;
         let preIndex = this.preShowTab;
         let nextIndex = this.nextShowTab;
         if (preIndex === nextIndex) { return; }
-        let itemTransformX = -this.itemWidth * index;
-        itemTransformX = itemTransformX === 0 ? 0.01 : -this.itemWidth * index;
-        console.info(itemTransformX);
-        Event.cssTransform(this.$refs.tabChange, 'translateX', itemTransformX, 'percent');
+        let itemTransformX = -this.$refs.wrap.offsetWidth * index;
+        itemTransformX = itemTransformX === 0 ? 0.01 : itemTransformX;
+        Event.cssTransform(this.$refs.tabChange, 'translateX', itemTransformX);
       },
       touchSlideaChange () {
         const wrap = this.$refs.tabChange;
         let startTouch = 0;
         let endTouch = 0;
         let dis = 0;
-        let nextIndexPage = 0;
-        const pages = this.soltEel;
-        const wrapWidth = wrap.offsetWidth / 3;
-        let flag = true;
+        let currentX = 0;
         wrap.addEventListener('touchstart', e => {
+          this.$refs.tabChange.style.transition = 'none';
           startTouch = e.changedTouches[0].pageX;
-          flag = true;
+          currentX = Event.cssTransform(this.$refs.tabChange, 'translateX');
+          console.info('sss');
         });
         wrap.addEventListener('touchmove', e => {
           endTouch = e.changedTouches[0].pageX;
           dis = endTouch - startTouch;
+          console.info(dis);
           // dis 大于0，手指往左滑动
-          nextIndexPage = dis > 0 ? this.preShowTab - 1 : this.preShowTab + 1;
-          if (nextIndexPage < 0 || nextIndexPage > pages.length) { return; }
-          this.removeAnimClass(pages);
-          // 设置父节点高度
-          this.wrapHeight(pages, this.preShowTab, nextIndexPage);
-          if (flag) {
-            if (dis < 0) {
-              Event.cssTransform(pages[nextIndexPage], 'translateX', wrapWidth);
-            }
+          let translateX = currentX + dis;
+          if (translateX >= 0 || translateX < -this.maxTranslateX) {
+            return;
           }
-          let translatePercent = wrapWidth + dis;
-          Event.cssTransform(pages[this.preShowTab], 'translateX', dis);
-          Event.cssTransform(pages[nextIndexPage], 'translateX', translatePercent);
-          flag = false;
+          Event.cssTransform(this.$refs.tabChange, 'translateX', translateX);
         });
         wrap.addEventListener('touchend', e => {
-          if (nextIndexPage < 0 || nextIndexPage > pages.length) { return; }
-          let isMoveHalf = Math.abs(dis / wrapWidth) > 0.5 ? 1 : 0;
-          pages[this.preShowTab].style.transition = '0.5s';
-          pages[nextIndexPage].style.transition = '0.5s';
-          console.info(pages[nextIndexPage]);
-          if (isMoveHalf) {
-            // 如果滑动超过一半 则翻页
-            Event.cssTransform(pages[nextIndexPage], 'translateX', 1);
-            Event.cssTransform(pages[this.preShowTab], 'translateX', -wrapWidth);
-            this.preShowTab = nextIndexPage;
-          } else {
-            // 如果滑动未超过一半 返回原状
-            Event.cssTransform(pages[nextIndexPage], 'translateX', wrapWidth);
-            Event.cssTransform(pages[this.preShowTab], 'translateX', 1);
-          }
-        });
-      },
-      childrenHeight (ele) {
-        let children = ele.children;
-        let height = 0;
-        for (let i = 0, len = children.length; i < len; i++) {
-          if (children[i].nodeType === 1) {
-            height += children[i].offsetHeight;
-          }
-        }
-        return height;
-      },
-      wrapHeight (pages, preIndex, nextIndex) {
-        // 计算前后tab的高度，取高的赋值给父节点的高度( 或者方案二：取最高子节点的高度？ 以后可根据需求来改)
-        let preHeigth = this.childrenHeight(pages[preIndex]);
-        let nextHeight = this.childrenHeight(pages[nextIndex]);
-        this.$refs.tabChange.style.height = (preHeigth > nextHeight ? preHeigth : nextHeight) + 'px';
-      },
-      removeAnimClass (pages) {
-        pages.forEach((item, index) => {
-          let className = item.className.split(' ');
-          className.forEach(names => {
-            if (names.indexOf('tab-change-') !== -1) {
-              item.classList.remove(names);
-            }
-          });
+          let curtX = -Event.cssTransform(this.$refs.tabChange, 'translateX');
+          const wrapWidth = this.$refs.wrap.offsetWidth;
+          let index = Math.round(curtX / wrapWidth);
+          this.$refs.tabChange.style.transition = '0.3s';
+          let tx = -wrapWidth * index === 0 ? 0.01 : -wrapWidth * index;
+          Event.cssTransform(this.$refs.tabChange, 'translateX', tx);
+          this.nextShowTab = index;
         });
       }
     }
