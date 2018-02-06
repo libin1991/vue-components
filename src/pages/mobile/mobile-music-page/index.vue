@@ -50,9 +50,6 @@
           </div>
         </TabChange>
       </div>
-      <div class="others">
-        asdfasdfasdggsad
-      </div>
     </div>
   </div>
 </template>

@@ -27,9 +27,9 @@ export default class Event {
     if (!el.transform) {
       el.transform = {};
     }
-    if (arguments.length > 2) {
+    if (val) {
       el.transform[attr] = val;
-      let sVal = '';
+      let attrs = '';
       for (let s in el.transform) {
         switch (s) {
           case 'rotate':
@@ -38,24 +38,24 @@ export default class Event {
           case 'rotateZ':
           case 'skewX':
           case 'skewY':
-            sVal += s + '(' + el.transform[s] + 'deg)';
+            attrs += s + '(' + el.transform[s] + 'deg)';
             break;
           case 'translateX':
           case 'translateY':
           case 'translateZ':
-            sVal += s + '(' + el.transform[s] + 'px)';
+            attrs += s + '(' + el.transform[s] + 'px)';
             break;
           case 'scaleX':
           case 'scaleY':
           case 'scale':
-            sVal += s + '(' + el.transform[s] + ')';
+            attrs += s + '(' + el.transform[s] + ')';
             break;
         }
-        el.style.WebkitTransform = el.style.transform = sVal;
+        el.style.WebkitTransform = el.style.transform = attrs;
       }
     } else {
       val = el.transform[attr];
-      if (typeof val === 'undefined') {
+      if (!val) {
         if (attr === 'scale' || attr === 'scaleX' || attr === 'scaleY') {
           val = 1;
         } else {
