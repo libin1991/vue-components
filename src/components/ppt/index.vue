@@ -2,7 +2,9 @@
   <div class="pptComp" ref="pptComp" >
     <ul class="ppt-pages" :style="ulWidth" ref="ulWrap">
       <li v-for="(item,index) in imgsInfo" :style="liWidth" ref="liWrap">
-        <img :src="item.src" @click="goto(item.href)"/>
+        <a href="item.href">
+          <img :src="item.src" />
+        </a>
       </li>
     </ul>
   <div class="nav-point">
