@@ -7,9 +7,9 @@
         </a>
       </li>
     </ul>
-  <div class="nav-point">
-    <span v-for="(item,index) in imgsInfo" :class="{active: index===pointNow}"></span>
-  </div>
+    <div class="nav-point">
+      <span v-for="(item,index) in imgsInfo" :class="{active: index===pointNow}"></span>
+    </div>
   </div>
 </template>
 
